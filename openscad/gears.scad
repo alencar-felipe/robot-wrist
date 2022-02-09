@@ -782,7 +782,7 @@ module bevel_herringbone_gear(modul, tooth_number, partial_cone_angle, tooth_wid
     // Torsion Angle gamma from Helix Angle
     gamma_g = 2*atan(tooth_width*tan(helix_angle)/(2*rg_outside-tooth_width));
     gamma = 2*asin(rg_outside/r_outside*sin(gamma_g/2));
-
+    
     echo("Part Cone Diameter at the Cone Base = ", d_outside);
 
     // Sizes for Complementary Truncated Cone

@@ -1,6 +1,4 @@
 include <gears.scad>
-include <nema17.scad>
-include <../utils/threads.scad>
 
 gear2_bolt_hex_d=12.8;
 gear2_bolt_sink=4;
@@ -62,19 +60,19 @@ module top_gear(modul=1.5,m=11){
     }
     
     translate([0,0,(10+2*modul)*sin(45)-7])
-    poly_cylinder(h=7+.5,r=11);
+    cylinder(h=7+.5,r=11);
     
     translate([0,0,-3.5])	
-    poly_cylinder(h=7+.5,r=11,center=true);
+    cylinder(h=7+.5,r=11,center=true);
     
-    poly_cylinder(h=100,r=11-.32,center=true);
+    cylinder(h=100,r=11-.32,center=true);
 
 
     //holes
     for(i=[0:m-1]){
 	rotate([0,0,i*360/m])
 	translate([0,a/3.5,0])
-	poly_cylinder(h=20,r=4,center=true);}
+	cylinder(h=20,r=4,center=true);}
 }
 }
 
@@ -101,18 +99,18 @@ module bottom_gear(modul=1.5,m=11){
     }
     
     translate([0,0,(10+2*modul)*sin(45)-7])
-    poly_cylinder(h=7+.5,r=11);
+    cylinder(h=7+.5,r=11);
     
     translate([0,0,-3.5])	
-    poly_cylinder(h=7+.5,r=11,center=true);
+    cylinder(h=7+.5,r=11,center=true);
     
-    poly_cylinder(h=100,r=11-.32,center=true);
+    cylinder(h=100,r=11-.32,center=true);
     
     //holes
     for(i=[0:m-1]){
 	rotate([0,0,i*360/m])
 	translate([0,a/3.5,0])
-	poly_cylinder(h=20,r=4,center=true);}
+	cylinder(h=20,r=4,center=true);}
 }
 
 height=50;
@@ -126,9 +124,9 @@ module lr_big_gear(modul=1.5,m=11){
 	    difference(){
 		big_gear();
 		translate([0,0,3.5+.4])
-		poly_cylinder(h=7,r=11,center=true);
+		cylinder(h=7,r=11,center=true);
 		
-		poly_cylinder(h=100,r=11-.32,center=true);}
+		cylinder(h=100,r=11-.32,center=true);}
 	    
 	    translate([0,0,-10])
 	    difference(){
@@ -142,13 +140,13 @@ module lr_big_gear(modul=1.5,m=11){
 		    optimized=false);
 		
 		translate([0,0,3.5])
-		poly_cylinder(h=7,r=11,center=true);}}
+		cylinder(h=7,r=11,center=true);}}
 
         //holes
     for(i=[0:m-1]){
 	rotate([0,0,i*360/m])
 	translate([0,a/3.5,0])
-	poly_cylinder(h=20,r=4,center=true);}
+	cylinder(h=20,r=4,center=true);}
 }
 }
 
@@ -169,11 +167,11 @@ module small_gear(modul=1.5){
 	translate([0,0,-10])
 	difference(){
 	    cylinder(h=10,r=aa/2);
-	    poly_cylinder(h=20,r=2.5,center=true);
+	    cylinder(h=20,r=2.5,center=true);
 	    
 	    translate([0,0,5])
 	    rotate([0,90,0])
-	    poly_cylinder(h=20,r=1.5,center=true);
+	    cylinder(h=20,r=1.5,center=true);
 	    
 	    translate([-5,0,5])
 	    cube([2.8,5.6,10+.1],center=true);
@@ -250,17 +248,17 @@ module middleU(c=a-10/sin(45)-2*1.6){
 	
 	cube([lcube,100,lcube],center=true);
 	
-	poly_cylinder(h=100,r=11-.32,center=true);
+	cylinder(h=100,r=11-.32,center=true);
 	rotate([0,90,0])
-	poly_cylinder(h=100,r=11-.32,center=true);
+	cylinder(h=100,r=11-.32,center=true);
 
 	// bearing hole
 	for(i=[0:3]){
 	    rotate([0,360*i/4,0]){
 		    translate([0,0,c/2-3]) 
-		    poly_cylinder(h=8,r=11,center=true);
+		    cylinder(h=8,r=11,center=true);
 		    translate([0,0,c/2-2*7+2])
-		    poly_cylinder(h=8,r=11,center=true);}}}
+		    cylinder(h=8,r=11,center=true);}}}
     
     intersection(){
 	sphere(r=rsphere);
@@ -316,7 +314,7 @@ module base(radius=a/2-modul,height=110, screws=false){
 	    translate([0,0,-h])
 	    cylinder(h=h,r=radius+3*h+.5*h,center=false);
 	}
-	poly_cylinder(h=10*height,r=radius,center=true);    
+	cylinder(h=10*height,r=radius,center=true);    
     
 	wheel_radius = radius+5*h;
 	tyre_diameter = 4*h;
@@ -330,16 +328,16 @@ module base(radius=a/2-modul,height=110, screws=false){
 	    for(i=[0:6]){
 		rotate([0,0,i*360/7])
 		translate([0,radius+2.5*h,0]){
-		    poly_cylinder(h=100,r=1.5,center=true);
+		    cylinder(h=100,r=1.5,center=true);
 		    translate([0,0,0])
-		    poly_cylinder(h=h,r=4,center=true);}}}
+		    cylinder(h=h,r=4,center=true);}}}
 
 
     // for(i=[0:6]){
     // 	rotate([0,0,(i+1/4)*360/7])
     // 	translate([0,0,height/1.25]){
     // 	    rotate([0,90,0])
-    // 	    poly_cylinder(h=rtube+2*h,r=1.5,center=false);}}
+    // 	    cylinder(h=rtube+2*h,r=1.5,center=false);}}
 
 }}
 
@@ -371,25 +369,25 @@ module lateral(width=15){
 	translate([0,-a/4,a/2]) cube([a/1.5,15,6.3],center=true);
 
 	translate([0,a/4,a/2])
-	poly_cylinder(h=50,r=4,center=true);
+	cylinder(h=50,r=4,center=true);
 	translate([0,-a/4,a/2])
-	poly_cylinder(h=50,r=4,center=true);
+	cylinder(h=50,r=4,center=true);
 
 	translate([h+.01,0,-smallgearoffset]){
 	    ////////////////////////////////////////////////////////////
 	    translate([0,0,-b/2+db])
 	    rotate([0,90,0]){
 		translate([lm3,lm3,0])
-		poly_cylinder(h=h,r=4,center=true);
+		cylinder(h=h,r=4,center=true);
 		translate([-lm3,lm3,0])
-		poly_cylinder(h=h,r=4,center=true);
+		cylinder(h=h,r=4,center=true);
 		translate([lm3,-lm3,0])
-		poly_cylinder(h=h,r=4,center=true);
+		cylinder(h=h,r=4,center=true);
 		translate([-lm3,-lm3,0])
-		poly_cylinder(h=h,r=4,center=true);
+		cylinder(h=h,r=4,center=true);
 		// Big hole
 
-		poly_cylinder(h=15,r=23/2+6-.8,center=true);}
+		cylinder(h=15,r=23/2+6-.8,center=true);}
 	    
 	    translate([0,0,-b/2+db-20])
 	    cube([width,20,width],center=true);
@@ -398,18 +396,18 @@ module lateral(width=15){
 	translate([0,0,-b/2+db])
 	rotate([0,90,0]){
 	    translate([lm3,lm3,0])
-	    poly_cylinder(h=2*l,r=1.5,center=true);
+	    cylinder(h=2*l,r=1.5,center=true);
 	    translate([-lm3,lm3,0])
-	    poly_cylinder(h=2*l,r=1.5,center=true);
+	    cylinder(h=2*l,r=1.5,center=true);
 	    translate([lm3,-lm3,0])
-	    poly_cylinder(h=2*l,r=1.5,center=true);
+	    cylinder(h=2*l,r=1.5,center=true);
 	    translate([-lm3,-lm3,0])
-	    poly_cylinder(h=2*l,r=1.5,center=true);
+	    cylinder(h=2*l,r=1.5,center=true);
 	    // Big hole    
-	    poly_cylinder(h=2*l,r=23/2,center=true);}}
+	    cylinder(h=2*l,r=23/2,center=true);}}
 
 	rotate([0,90,0])
-	poly_cylinder(h=2*l,r=4,center=true);
+	cylinder(h=2*l,r=4,center=true);
 
 	translate([gear2_bolt_sink,0,0])
 	rotate([0,90,0])
@@ -448,17 +446,17 @@ module arm1(height=165){
 
 	//screws
 	translate([lenght-7.5,a/4,0])
-	poly_cylinder(h=30,r=4,center=true);
+	cylinder(h=30,r=4,center=true);
 	translate([lenght-7.5,-a/4,0])
-	poly_cylinder(h=50,r=4,center=true);
+	cylinder(h=50,r=4,center=true);
 
 	translate([-(lenght-7.5),a/4,0])
-	poly_cylinder(h=30,r=4,center=true);
+	cylinder(h=30,r=4,center=true);
 	translate([-(lenght-7.5),-a/4,0])
-	poly_cylinder(h=50,r=4,center=true);
+	cylinder(h=50,r=4,center=true);
 
 
-	poly_cylinder(h=100,r=25.4-h,center=true);
+	cylinder(h=100,r=25.4-h,center=true);
 	
 //	translate([0,0,h])cylinder(h=3*h,r=a/2-modul-h,center=true);
 
