@@ -1,3 +1,5 @@
+#include "stm32f103x6.h"
+
 // This is the symbol defined in the linker script.
 extern unsigned long _end_of_ram;
 
@@ -20,24 +22,25 @@ void (* const interrupt_vectors[])(void) = {
 
 void wait() {
     // Do some NOPs for a while to pass some time.
-    for (unsigned int i = 0; i < 2000000; ++i) __asm__ volatile ("nop");
+    for (unsigned int i = 0; i < 250000; ++i) __asm__ volatile ("nop");
 }
 
 void main() {
     // Enable port C clock gate.
-    *((volatile unsigned int *)0x40021018) |= (1 << 4);
-
+    //*((volatile unsigned int *)0x40021018) |= (1 << 4);
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN_Msk;
+    
     // Configure GPIO C pin 13 as output.
-    *((volatile unsigned int *)0x40011004) = ((0x44444444 // The reset value
+    GPIOC->CRH = ((0x44444444 // The reset value
         & ~(0xfU << 20))  // Clear out the bits for pin 13
-        |  (0x3U << 20)); // Set both MODE bits, leave CNF at 0
+        |  (0b10 << 20)); // Set both MODE bits, leave CNF at 0
 
     while (1) {
         // Set the output bit.
-        *((volatile unsigned int *)0x40011010) = (1U << 13);
+        GPIOC->ODR = (1 << 13);
         wait();
         // Reset it again.
-        *((volatile unsigned int *)0x40011010) = (1U << 29);
+        GPIOC->ODR = (0 << 13);
         wait();
     }
 }
