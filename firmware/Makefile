@@ -91,7 +91,7 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) \
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex \
 $(BUILD_DIR)/$(TARGET).bin
 
-flash: 
+flash: all
 	openocd -f stlink_bluepill.cfg -c \
 	"program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
 
