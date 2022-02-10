@@ -22,12 +22,19 @@ void (* const interrupt_vectors[])(void) = {
 
 void wait() {
     // Do some NOPs for a while to pass some time.
-    for (unsigned int i = 0; i < 250000; ++i) __asm__ volatile ("nop");
+    for (unsigned int i = 0; i < 200000; ++i) __asm__ volatile ("nop");
 }
 
 void main() {
+    systemClockSetup();
+
+    // Enable port A clock gate.
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN_Msk;
+
+    // Enable port B clock gate.
+    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN_Msk;
+
     // Enable port C clock gate.
-    //*((volatile unsigned int *)0x40021018) |= (1 << 4);
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN_Msk;
     
     // Configure GPIO C pin 13 as output.
@@ -43,4 +50,27 @@ void main() {
         GPIOC->ODR = (0 << 13);
         wait();
     }
+}
+
+
+void systemClockSetup(void)
+{
+	// Necessary wait states for Flash for high speeds
+	FLASH->ACR = 0x12;
+	// Enable HSE
+	RCC->CR |= (1 << 16);
+	// Wait untill HSE settles down
+	while (!(RCC->CR & (1 << 17)));
+	// Select Prediv1 as PLL source
+	RCC->CFGR |= (1 << 16);
+	// Set PLL1 multiplication factor to 9
+	RCC->CFGR |= (0b0111 << 18);
+	// Set APB1 to 36MHz
+	RCC->CFGR |= 1 << 10;
+	// Enable PLL
+	RCC->CR |= (1 << 24);
+	// Wait untill PLL settles down
+	while (!(RCC->CR & (1 << 25)));
+	// Finally, choose PLL as the system clock
+	RCC->CFGR |= (0b10 << 0);
 }
