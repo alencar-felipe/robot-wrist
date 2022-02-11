@@ -15,7 +15,8 @@ BUILD_DIR = build
 C_SOURCES =  \
 src/startup.c \
 src/main.c \
-src/usart.c
+src/usart.c \
+src/adc.c
 
 # ASM sources
 ASM_SOURCES =

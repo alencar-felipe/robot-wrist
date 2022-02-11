@@ -9,9 +9,7 @@ int main() {
     clock_setup();
     gpio_setup();
     usart_setup();
-	//adc_setup();
-
-	//malloc(10);
+	adc_setup();
 
     while (1) {
         // Set the output bit.
@@ -21,8 +19,8 @@ int main() {
         GPIOC->ODR = (0 << 13);
         wait();
 
-		//int v = (int) adc_read();
-		printf("a");
+		int v = (int) adc_read();
+		printf("%d\r\n", v);
         //usart_write("robot-wrist\r\n", 13);
     }
 

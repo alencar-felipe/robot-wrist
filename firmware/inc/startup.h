@@ -13,6 +13,6 @@
 uint32_t reset_handler();
 int main(); //weak
 
-//void *_sbrk_r(struct _reent *reent, ptrdiff_t diff);
+void *_sbrk_r(struct _reent *reent, ptrdiff_t diff);
 
 #endif
