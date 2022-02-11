@@ -1,5 +1,6 @@
 #include "stm32f103x6.h"
 #include "main.h"
+#include "usart.h"
 
 // Symbols defined in the linker script
 extern unsigned long _eram;
@@ -86,28 +87,12 @@ __attribute__ ((section(".interrupt_vectors"))) = {
 	0,                               /* 0x12C DMA2_Ch4                        */
 };
 
-void copy_data()
-{	
-	char *src = &_etext;
-	char *dst = &_sdata;
-
-	/* ROM has data at end of text; copy it.  */
-	while (dst < &_edata) *dst++ = *src++;
-
-	/* Zero bss.  */
-	for (dst = &_sbss; dst< &_ebss; dst++) *dst = 0;
-}
-
-void wait() {
-    // Do some NOPs for a while to pass some time.
-    for (unsigned int i = 0; i < 200000; ++i) __asm__ volatile ("nop");
-}
-
 int main() {
     copy_data();
     clock_setup();
     gpio_setup();
-    
+    usart_setup();
+
     while (1) {
         // Set the output bit.
         GPIOC->ODR = (1 << 13);
@@ -115,7 +100,23 @@ int main() {
         // Reset it again.
         GPIOC->ODR = (0 << 13);
         wait();
+
+        char c= 'a';
+        usart_read(&c, 1);
+        usart_write(&c, 1);
     }
+}
+
+void copy_data()
+{	
+	char *src = &_etext;
+	char *dst = &_sdata;
+
+	// ROM has data at end of text; copy it
+	while (dst < &_edata) *dst++ = *src++;
+
+	// Zero bss
+	for (dst = &_sbss; dst< &_ebss; dst++) *dst = 0;
 }
 
 void clock_setup(void)
@@ -142,17 +143,25 @@ void clock_setup(void)
 
 void gpio_setup()
 {
-    // Enable port A clock gate.
+    // Enable GPIOA clock
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 
-    // Enable port B clock gate.
+    // Enable GPIOB clock
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
 
-    // Enable port C clock gate.
+    // Enable GPIOC clock
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
     
     // Configure GPIO C pin 13 as output.
     GPIOC->CRH = ((0x44444444 // The reset value
         & ~(0xfU << 20))  // Clear out the bits for pin 13
         |  (0b10 << 20)); // Set both MODE bits, leave CNF at 0
+}
+
+
+
+void wait() 
+{
+    // Do some NOPs for a while to pass some time.
+    for (unsigned int i = 0; i < 200000; ++i) __asm__ volatile ("nop");
 }
