@@ -4,6 +4,9 @@ void _adc_setup(ADC_TypeDef *adc, uint8_t channel);
 
 void adc_setup()
 {
+    gpio_setup(GPIOB, GPIO_ANALOG, 0); //PB0 -> CH_8
+    gpio_setup(GPIOB, GPIO_ANALOG, 1); //PB1 -> CH_9
+
 	// Set prescaler to 6 (72 MHz -> 12 MHz)
     RCC-> CFGR &= ~RCC_CFGR_ADCPRE;
 	RCC-> CFGR |= RCC_CFGR_ADCPRE_1;
@@ -11,11 +14,7 @@ void adc_setup()
 	RCC->APB2ENR |= (RCC_APB2ENR_AFIOEN | // Enable alternate function clock.
                      RCC_APB2ENR_IOPAEN | // Enable GPIOA clock.
                      RCC_APB2ENR_ADC1EN | // Enable ADC1 clock.
-                     RCC_APB2ENR_ADC2EN); // Enable ADC2 clock.
-
-	// Make PB0 and PB1 analog input (0b0000)
-	GPIOC->CRL &= ~(GPIO_CRL_MODE0 | GPIO_CRL_CNF0 |
-                    GPIO_CRL_MODE1 | GPIO_CRL_CNF1);        
+                     RCC_APB2ENR_ADC2EN); // Enable ADC2 clock.    
 
 	_adc_setup(ADC1, 8); //PB0 -> CH_8
     _adc_setup(ADC2, 9); //PB1 -> CH_9

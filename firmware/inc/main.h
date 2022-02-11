@@ -2,9 +2,8 @@
 #define __MAIN_H
 
 int main();
-void copy_data();
+void main_gpio_setup();
 void clock_setup();
-void gpio_setup();
 void uart_setup();
 void wait();
 

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "stm32f103x6.h"
+#include "gpio.h"
 
 void usart_setup();
 void usart_write(char *data, size_t len);

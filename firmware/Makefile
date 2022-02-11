@@ -15,6 +15,7 @@ BUILD_DIR = build
 C_SOURCES =  \
 src/startup.c \
 src/main.c \
+src/gpio.c \
 src/usart.c \
 src/adc.c
 

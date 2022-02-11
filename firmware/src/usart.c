@@ -2,18 +2,14 @@
 
 void usart_setup()
 {
+	gpio_setup(GPIOA, GPIO_ALT, 9); // PB9 -> TX
+	gpio_setup(GPIOA, GPIO_INPUT, 10); // PB10 -> RX
+
     // Enable alternate function clock
 	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 
-	// Enable GPIOA clock
-	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
-	
     // Enable UART1 clock
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
-
-	// Make GPIOA Pin 9,10 (PA9, PA10) alternate-function output (0b1010)
-	GPIOA->CRH &= 0xFFFFF00F;
-	GPIOA->CRH |= 0x000008B0;
 
 	// Enable USART
 	USART1->CR1 |= USART_CR1_UE;

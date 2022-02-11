@@ -1,13 +1,14 @@
 #include <stdio.h>
 
 #include "main.h"
+#include "gpio.h"
 #include "usart.h"
 #include "adc.h"
 
 int main() {
     copy_data();
     clock_setup();
-    gpio_setup();
+	main_gpio_setup();
     usart_setup();
 	adc_setup();
 
@@ -50,21 +51,15 @@ void clock_setup(void)
 	RCC->CFGR |= (0b10 << 0);
 }
 
-void gpio_setup()
+void main_gpio_setup()
 {
-    // Enable GPIOA clock
-    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+	// built-in led
+	gpio_setup(GPIOC, GPIO_OUT, 13);
 
-    // Enable GPIOB clock
-    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
-
-    // Enable GPIOC clock
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
-    
-    // Configure GPIO C pin 13 as output.
-    GPIOC->CRH = ((0x44444444 // The reset value
-        & ~(0xfU << 20))  // Clear out the bits for pin 13
-        |  (0b10 << 20)); // Set both MODE bits, leave CNF at 0
+	// stepper drivers
+	for(uint8_t i = 0; i <= 7; i++) {
+		gpio_setup(GPIOA, GPIO_OUT, i);	
+	}
 }
 
 void wait() 
