@@ -1,64 +1,54 @@
 #include "adc.h"
 
+void _adc_setup(ADC_TypeDef *adc, uint8_t channel);
+
 void adc_setup()
 {
-    // ADC clock can be at 14 Mhz max. 
-    // Since APB2 is at 72 MHz, divide it by 6 to make the ADC run at 12 Mhz
-	
-    // Ensure ADCPRE is zero
-	RCC-> CFGR &= ~RCC_CFGR_ADCPRE;
-	// Set prescaler to 6
+	// Set prescaler to 6 (72 MHz -> 12 MHz)
+    RCC-> CFGR &= ~RCC_CFGR_ADCPRE;
 	RCC-> CFGR |= RCC_CFGR_ADCPRE_1;
-
-    // Enable alternate function clock. Bit 0 in RCC APB2ENR register
-	RCC->APB2ENR |= (1 << 0);
-	// Enable GPIOD clock. Bit 5 in RCC APB2ENR register
-	RCC->APB2ENR |= (1 << 5);
-	// Enable GPIOC clock. Bit 4 in RCC APB2ENR register
-	RCC->APB2ENR |= (1 << 4);
-	// Enable clock for ADC1 clock. Bit 9 in RCC APB2ENR register
-	RCC->APB2ENR |= (1 << 9);
+   
+	RCC->APB2ENR |= (RCC_APB2ENR_AFIOEN | // Enable alternate function clock.
+                     RCC_APB2ENR_IOPAEN | // Enable GPIOA clock.
+                     RCC_APB2ENR_ADC1EN | // Enable ADC1 clock.
+                     RCC_APB2ENR_ADC2EN); // Enable ADC2 clock.
 
 	// Make PB0 and PB1 analog input (0b0000)
 	GPIOC->CRL &= ~(GPIO_CRL_MODE0 | GPIO_CRL_CNF0 |
                     GPIO_CRL_MODE1 | GPIO_CRL_CNF1);        
 
-	// Enable End of Conversion (EOC) interrupt
-	ADC1->CR1 |= (1 << 5);
+	_adc_setup(ADC1, 8); //PB0 -> CH_8
+    _adc_setup(ADC2, 9); //PB1 -> CH_9
+}
 
-	// One conversion
-	ADC1->SQR1 = 0x00000000;
+void _adc_setup(ADC_TypeDef *adc, uint8_t channel)
+{
+    // Enable End of Conversion (EOC) interrupt
+	adc->CR1 |= ADC_CR1_EOSIE;
 
-	// Choose the analog channel to read
-	// Since we want channel 8 to be the first
-	//   conversion we write 8 to SQ1 bits (3:0)
-	//   which is in SQR3 register. For multiple conversions
-	//   keep writing the channel numbers to SQx bits.
-	ADC1->SQR3 = (8 << 0);
+	// Set conversion sequence length (1)
+	adc->SQR1 = (0 << ADC_SQR1_L_Pos);
+
+	// Set conversion sequence
+	adc->SQR3 = (channel << ADC_SQR3_SQ1_Pos);
 
 	// Set up software trigger to start conversion
-	ADC1->CR2 |= (7 << 17);  // Select SWSTART as trigger
-	ADC1->CR2 |= (1 << 20);  // Enable external trigger
-
-	// Enable continuous conversion
-	ADC1->CR2 |= (1 << 1);
-
-	//enable_interrupt(ADC1_2_IRQn);
-
-	// Enable A/D conversion
-	ADC1->CR2 |= (1 << 0);
+	adc->CR2 |= (ADC_CR2_EXTSEL  | // Select SWSTART as trigger
+                  ADC_CR2_EXTTRIG | // Enable external trigger
+                  ADC_CR2_CONT    | // Enable continuous conversion
+                  ADC_CR2_ADON);    // Enable A/D conversion
 
 	// Calibration reset and start
 	// Optional for better accuracy.
-	ADC1->CR2 |= (1 << 3);
-	while((ADC1->CR2 & (1 << 3)));
-	ADC1->CR2 |= (1 << 2);
-	while((ADC1->CR2 & (1 << 2)));
-
+	adc->CR2 |= ADC_CR2_RSTCAL;
+	while((ADC1->CR2 & ADC_CR2_RSTCAL));
+	adc->CR2 |= ADC_CR2_CAL;
+	while((ADC1->CR2 & ADC_CR2_CAL));
+    
 	// Start conversion with software trigger
-	ADC1->CR2 |= (1<<22);
+	adc->CR2 |= ADC_CR2_SWSTART;
 }
 
-uint16_t adc_read() {
-    return ADC1->DR;
+uint16_t adc_read(ADC_TypeDef *adc) {
+    return adc->DR;
 }

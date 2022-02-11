@@ -19,8 +19,9 @@ int main() {
         GPIOC->ODR = (0 << 13);
         wait();
 
-		int v = (int) adc_read();
-		printf("%d\r\n", v);
+		int a = (int) adc_read(ADC1);
+		int b = (int) adc_read(ADC2);
+		printf("%d %d\r\n", a, b);
         //usart_write("robot-wrist\r\n", 13);
     }
 
