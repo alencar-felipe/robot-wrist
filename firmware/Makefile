@@ -13,6 +13,7 @@ BUILD_DIR = build
 
 # C sources
 C_SOURCES =  \
+src/startup.c \
 src/main.c \
 src/usart.c
 

@@ -43,7 +43,13 @@ void usart_write(char *data, size_t len)
 void usart_read(char *data, size_t len)
 {
     for(;len>0; len--, data++) {
-        while(!(USART1->SR & USART_SR_RXNE));
+		while(!(USART1->SR & USART_SR_RXNE));
 		(*data) = USART1->DR  & (uint8_t) 0x00FF;
 	}
+}
+
+int _write(int handle, char* data, int size)
+{
+	usart_write(data, size);
+	return size;
 }

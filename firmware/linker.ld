@@ -13,9 +13,13 @@ SECTIONS
         . = 304;                        /* Skip to end of interrupt vectors */
         *(.text*)                       /* Program code */
         *(.rodata*)                     /* Read only data */
-        . = ALIGN(4);
+		
+		KEEP (*(.init))
+    	KEEP (*(.fini))
+        
+		. = ALIGN(4);
 		_etext = .;
-    } > FLASH = 0xFF /* Put this in the flash memory region, default to 0xFF */
+    } > FLASH
 
     _sidata = .;
 
