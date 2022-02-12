@@ -3,8 +3,20 @@
 #define STEPS_PER_REV (4096)
 #define OPAMP_GAIN (33.0)
 #define SHUNT (0.5) //ohm
+#define BUFLEN (1024)
 
-stepper_t stepper1, stepper2;
+stepper_t stepper1; //stepper 1
+stepper_t stepper2; //stepper 2
+int ret; //return value for stdlib functions
+char gcode_char; //gcode command char
+int cmd; //gcode command
+float rot; //for sscanf
+float arm; //for sscanf
+float cur_rot = 0; //current rotation position
+float cur_arm = 0; //current arm position
+float sens1 = 0; //motor 1 current
+float sens2 = 0; //motor 2 current
+char buf[BUFLEN]; //fgets buffer
 
 void clock_setup();
 void gpios_setup();
@@ -17,13 +29,6 @@ void wait();
 void enable_interrupt(IRQn_Type IRQn);
 void disable_interrupt(IRQn_Type IRQn);
 
-char c;
-int d, ret;
-float rot, arm;
-float sens1 = 0, sens2 = 0;
-
-char line[1024];
-
 int main() {
     clock_setup();
 	gpios_setup();
@@ -32,26 +37,36 @@ int main() {
     usart_setup();
 	adc_setup();
 
+	// just to know that the program is running
+	printf("robot-wrist\r\n");
+
     while (1) {
+		// blink built-in LED
 		gpio_toggle(GPIOC, 13);
-        wait();
 		
-		fgets(line, 1024, stdin);
+		// read line from usart
+		fgets(buf, BUFLEN, stdin);
 
-		ret = sscanf(line, " %c%d %f %f", &c, &d, &rot, &arm);
+		// decode gcode
+		ret = sscanf(buf, " %c%d %f %f", &gcode_char, &cmd, &rot, &arm);
 		
-		if(c != 'W' || ret < 2) {
-			d=100;
-		};
+		if(gcode_char != 'W' || ret < 2) cmd = -1;
 
-		switch(d) {
+		switch(cmd) {
 			case 0: //move
 				if(ret == 4) {
 					move();
 					continue;
 				}
 				
-			case 1: //current sense
+			case 1: //set position
+				if(ret == 4) {
+					cur_rot = rot;
+					cur_arm = arm;
+					continue;
+				}
+
+			case 2: //current sense
 				if(ret == 2) {
 					printf("%.3f %.3f\r\n", sens1, sens2);
 					continue;	
@@ -160,13 +175,25 @@ void move()
 {
 	int steps1, steps2;
 	int rot_steps, arm_steps;
+	float tmp;
+
+	// Transform absolute angles to relative
+	tmp = rot;
+	rot -= cur_rot;
+	cur_rot = tmp;
+	tmp = arm;
+	arm -= cur_arm;
+	cur_arm = tmp;
 	
+	// Convert to motor steps
 	rot_steps = rot * STEPS_PER_REV / 360.0;
 	arm_steps = arm * STEPS_PER_REV / 360.0;
 
+	// Calculate steps for each motor
 	steps1 = arm_steps + rot_steps;
 	steps2 = arm_steps - rot_steps;
 
+	// Move motors
 	stepper_step(&stepper1, steps1);
 	stepper_step(&stepper2, -steps2);
 }
