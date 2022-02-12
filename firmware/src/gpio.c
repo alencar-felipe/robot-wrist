@@ -1,6 +1,7 @@
 #include "gpio.h"
 
-void gpio_setup(GPIO_TypeDef *gpio, gpio_config_t mode, uint32_t pin) {
+void gpio_setup(GPIO_TypeDef *gpio, gpio_config_t mode, uint32_t pin)
+{
     __IO uint32_t *cr;
     
     if(gpio == GPIOA) {
@@ -26,10 +27,19 @@ void gpio_setup(GPIO_TypeDef *gpio, gpio_config_t mode, uint32_t pin) {
     *(cr) |= (mode << 4*pin);
 }
 
-void gpio_write(GPIO_TypeDef *gpio, uint32_t pin, gpio_value_t value) {
-    if(value) {
-        gpio->ODR |= 1UL << pin;
+void gpio_write(GPIO_TypeDef *gpio, uint32_t pin, gpio_value_t value) 
+{
+    if(value != LOW) {
+        gpio->BSRR = 1 << pin;
     } else {
-        gpio->ODR &= ~(1UL << pin);
+        gpio->BSRR = 1 << (pin + 16);
     }
+}
+
+void gpio_toggle(GPIO_TypeDef *gpio, uint32_t pin) 
+{
+    uint32_t odr =  gpio->ODR;
+    pin = 1 << pin;
+
+    gpio->BSRR = ((odr & pin) << 16) | (~odr & pin);
 }

@@ -22,5 +22,6 @@ typedef enum
 
 void gpio_setup(GPIO_TypeDef *gpio, gpio_config_t mode, uint32_t pin);
 void gpio_write(GPIO_TypeDef *gpio, uint32_t pin, gpio_value_t value);
+void gpio_toggle(GPIO_TypeDef *gpio, uint32_t pin);
 
 #endif

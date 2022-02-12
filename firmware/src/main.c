@@ -1,15 +1,26 @@
 #include "main.h"
 
+#define STEPS_PER_REV (4096)
+#define OPAMP_GAIN (33.0)
+#define SHUNT (0.5) //ohm
+
 stepper_t stepper1, stepper2;
 
 void clock_setup();
 void gpios_setup();
 void steppers_setup();
 void timer_setup();
+void current_sense();
+void move();
 void tim3_handler();
 void wait();
 void enable_interrupt(IRQn_Type IRQn);
 void disable_interrupt(IRQn_Type IRQn);
+
+char c;
+int d;
+float rot, arm;
+float sens1 = 0, sens2 = 0;
 
 int main() {
     clock_setup();
@@ -19,23 +30,30 @@ int main() {
     usart_setup();
 	adc_setup();
 
-	//int a = 0, b = 0;
-
     while (1) {
-		gpio_write(GPIOC, 13, HIGH);
-        wait();
-        gpio_write(GPIOC, 13, LOW);
+		gpio_toggle(GPIOC, 13);
         wait();
 
-		stepper_step(&stepper1, -400);
-		stepper_step(&stepper2, -400);
+		scanf(" %c%d", &c, &d);	
 
-		//a = (int) adc_read(ADC1);
-		//b = (int) adc_read(ADC2);
+		if(c != 'W') d = 100;
 
-		int c;
-		scanf("%d", &c);	
-		printf("N: %d\r\n", c);
+		printf("%d\r\n", d);
+
+		switch(d) {
+			case 0: //move
+				scanf("%f %f", &rot, &arm);
+				printf("%f %f\n", rot, arm);
+				move();
+				break;
+			
+			case 1: //current sense
+				printf("%.3f %.3f\r\n", sens1, sens2);
+				break;
+
+			default:
+				printf("Error.\r\n");
+		}
     }
 
 	return 0;
@@ -115,8 +133,44 @@ void timer_setup()
 	TIM3->CR1 |= TIM_CR1_CEN;
 }
 
+void current_sense() 
+{
+	uint16_t raw1, raw2;
+	float tmp1, tmp2;
+
+	// Get raw ADC reading
+	raw1 = adc_read(ADC1);
+	raw2 = adc_read(ADC2);
+
+	//Conversion to Amperes
+	tmp1 = ((float) raw1)*(3.3 / (4095.0 * OPAMP_GAIN * SHUNT)); 
+	tmp2 = ((float) raw2)*(3.3 / (4095.0 * OPAMP_GAIN * SHUNT)); 
+
+	//Low pass filter
+	sens1 = (tmp1 + 4*sens1)/5;
+	sens2 = (tmp2 + 4*sens2)/5;
+}
+
+void move()
+{
+	int steps1, steps2;
+	int rot_steps, arm_steps;
+	
+	rot_steps = rot * STEPS_PER_REV / 360.0;
+	arm_steps = arm * STEPS_PER_REV / 360.0;
+
+	steps1 = arm_steps + rot_steps;
+	steps2 = arm_steps - rot_steps;
+
+	printf("%d %d\n", steps1, steps2);
+
+	stepper_step(&stepper1, steps1);
+	stepper_step(&stepper2, -steps2);
+}
+
 void tim3_handler()
 {
+	current_sense();
 	stepper_update(&stepper1);
 	stepper_update(&stepper2);
 	TIM3->SR &= ~TIM_SR_UIF;
