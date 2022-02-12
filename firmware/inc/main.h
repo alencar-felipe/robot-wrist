@@ -2,6 +2,7 @@
 #define __MAIN_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "stm32f103x6.h"
 #include "gpio.h"

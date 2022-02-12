@@ -18,9 +18,11 @@ void enable_interrupt(IRQn_Type IRQn);
 void disable_interrupt(IRQn_Type IRQn);
 
 char c;
-int d;
+int d, ret;
 float rot, arm;
 float sens1 = 0, sens2 = 0;
+
+char line[1024];
 
 int main() {
     clock_setup();
@@ -33,27 +35,30 @@ int main() {
     while (1) {
 		gpio_toggle(GPIOC, 13);
         wait();
+		
+		fgets(line, 1024, stdin);
 
-		scanf(" %c%d", &c, &d);	
-
-		if(c != 'W') d = 100;
-
-		printf("%d\r\n", d);
+		ret = sscanf(line, " %c%d %f %f", &c, &d, &rot, &arm);
+		
+		if(c != 'W' || ret < 2) {
+			d=100;
+		};
 
 		switch(d) {
 			case 0: //move
-				scanf("%f %f", &rot, &arm);
-				printf("%f %f\n", rot, arm);
-				move();
-				break;
-			
+				if(ret == 4) {
+					move();
+					continue;
+				}
+				
 			case 1: //current sense
-				printf("%.3f %.3f\r\n", sens1, sens2);
-				break;
-
-			default:
-				printf("Error.\r\n");
+				if(ret == 2) {
+					printf("%.3f %.3f\r\n", sens1, sens2);
+					continue;	
+				}
 		}
+
+		printf("Error.\r\n");
     }
 
 	return 0;
@@ -161,8 +166,6 @@ void move()
 
 	steps1 = arm_steps + rot_steps;
 	steps2 = arm_steps - rot_steps;
-
-	printf("%d %d\n", steps1, steps2);
 
 	stepper_step(&stepper1, steps1);
 	stepper_step(&stepper2, -steps2);
