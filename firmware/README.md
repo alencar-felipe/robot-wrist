@@ -1,3 +1,63 @@
+## Custom Gcode
+### W0: Move
+Performs a movement.
+
+#### Usage
+```
+W0 [rotation] [arm]
+```
+
+#### Parameters
+- [rotation]: rotation angle in degrees
+- [arm]: arm angle in degrees
+
+#### Example
+```
+W0 180.0 0.0
+```
+
+### W1: Set position
+Set the current position to the values specified. (Does not move the motors)
+
+#### Usage
+```
+W1 [rotation] [arm]
+```
+#### Parameters
+- [rotation]: rotation angle in degrees
+- [arm]: arm angle in degrees
+
+#### Example
+```
+W1 0.0 0.0
+```
+
+### W2: Get electric currents value
+Gets currents of both motors in amperes.
+
+#### Usage
+```
+W2
+```
+
+#### Example
+
+```
+W2
+0.141 0.136
+```
+
+## Build
+
+```
+$ make clean && make build
+```
+
+## Flash
+
+```
+$ make flash
+```
 ## Debug
 
 ```
