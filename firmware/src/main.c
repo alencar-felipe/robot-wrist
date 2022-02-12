@@ -19,7 +19,7 @@ int main() {
     usart_setup();
 	adc_setup();
 
-	int a = 0, b = 0;
+	//int a = 0, b = 0;
 
     while (1) {
 		gpio_write(GPIOC, 13, HIGH);
@@ -27,13 +27,15 @@ int main() {
         gpio_write(GPIOC, 13, LOW);
         wait();
 
-		stepper_step(&stepper1, -200);
-		stepper_step(&stepper2, -200);
+		stepper_step(&stepper1, -400);
+		stepper_step(&stepper2, -400);
 
-		a = (int) adc_read(ADC1);
-		b = (int) adc_read(ADC2);
+		//a = (int) adc_read(ADC1);
+		//b = (int) adc_read(ADC2);
 
-		printf("%5d %5d\n\r", a, b);
+		int c;
+		scanf("%d", &c);	
+		printf("N: %d\r\n", c);
     }
 
 	return 0;

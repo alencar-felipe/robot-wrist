@@ -44,8 +44,14 @@ void usart_read(char *data, size_t len)
 	}
 }
 
-int _write(int handle, char* data, int size)
+int _write(int fd, char *ptr, int len)
 {
-	usart_write(data, size);
-	return size;
+	usart_write(ptr, len);
+	return len;
+}
+
+int _read (int fd, char *ptr, int len) 
+{
+  usart_read(ptr, len);
+  return len;
 }
