@@ -8,7 +8,7 @@ extern char _etext, _sdata, _edata, _sbss, _ebss;
 uint32_t (* const vector_table[])
 __attribute__ ((section(".interrupt_vectors"))) = {
 	(uint32_t *) &_eram,             /* 0x000 Stack Pointer                   */
-	(uint32_t *) main,               /* 0x004 Reset                           */
+	(uint32_t *) reset_handler,      /* 0x004 Reset                           */
 	0,                               /* 0x008 Non maskable interrupt          */
 	0,                               /* 0x00C HardFault                       */
 	0,                               /* 0x010 Memory Management               */
@@ -93,6 +93,7 @@ void copy_data();
 
 uint32_t reset_handler() {
     copy_data();
+	__libc_init_array();
     main();
     while(1);
 }
@@ -129,3 +130,16 @@ caddr_t _sbrk(int incr)
 
   return (caddr_t) prev_heap;
 }
+
+int _close(int file) { return -1; }
+ 
+int _fstat(int file, struct stat *st) {
+ st->st_mode = S_IFCHR;
+ return 0;
+}
+ 
+int _isatty(int file) { return 1; }
+ 
+int _lseek(int file, int ptr, int dir) { return 0; }
+ 
+int _open(const char *name, int flags, int mode) { return -1; }

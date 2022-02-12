@@ -40,8 +40,8 @@ int main() {
 
 		int a = (int) adc_read(ADC1);
 		int b = (int) adc_read(ADC2);
-		//printf("%d %d\r\n", a, b);
-        //usart_write("robot-wrist\r\n", 13);
+		
+		printf("%5d %5d\n\r", a, b);
     }
 
 	return 0;
@@ -83,5 +83,5 @@ void main_gpio_setup()
 void wait() 
 {
     // Do some NOPs for a while to pass some time.
-    for (unsigned int i = 0; i < 5000; ++i) __asm__ volatile ("nop");
+    for (unsigned int i = 0; i < 200000; ++i) __asm__ volatile ("nop");
 }

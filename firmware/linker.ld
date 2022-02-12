@@ -1,3 +1,5 @@
+ENTRY(reset_handler)
+
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 10K

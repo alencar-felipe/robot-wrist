@@ -7,7 +7,7 @@
 
 #include "stm32f103x6.h"
 
-#define MAX_HEAP_SIZE (0x200)
+#define MAX_HEAP_SIZE (0x400)
 #define __WEAK __attribute__((weak))
 
 uint32_t reset_handler();
