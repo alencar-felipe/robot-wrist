@@ -1,4 +1,4 @@
-#include <startup.h>
+#include "startup.h"
 
 // Symbols defined in the linker script
 extern unsigned long _eram;
@@ -52,7 +52,7 @@ __attribute__ ((section(".interrupt_vectors"))) = {
 	0,                               /* 0x0A8 TIM1 Trigger and Communication  */
 	0,                               /* 0x0AC TIM1 Capture Compare            */
 	0,                               /* 0x0B0 TIM2                            */
-	0,                               /* 0x0B4 TIM3                            */
+	(uint32_t *) tim3_handler,       /* 0x0B4 TIM3                            */
 	0,                               /* 0x0B8 TIM4                            */
 	0,                               /* 0x0BC I2C1 event                      */
 	0,                               /* 0x0C0 I2C1 error                      */
@@ -90,8 +90,9 @@ static char base_heap[MAX_HEAP_SIZE];
 static char *heap = base_heap;
 
 void copy_data();
+void __libc_init_array();
 
-uint32_t reset_handler() {
+void reset_handler() {
     copy_data();
 	__libc_init_array();
     main();
@@ -99,6 +100,10 @@ uint32_t reset_handler() {
 }
 
 __WEAK int main() {
+    //EMPTY
+}
+
+__WEAK void tim3_handler() {
     //EMPTY
 }
 
@@ -130,16 +135,3 @@ caddr_t _sbrk(int incr)
 
   return (caddr_t) prev_heap;
 }
-
-int _close(int file) { return -1; }
- 
-int _fstat(int file, struct stat *st) {
- st->st_mode = S_IFCHR;
- return 0;
-}
- 
-int _isatty(int file) { return 1; }
- 
-int _lseek(int file, int ptr, int dir) { return 0; }
- 
-int _open(const char *name, int flags, int mode) { return -1; }

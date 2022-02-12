@@ -56,6 +56,8 @@ void stepper_update(stepper_t *stepper)
         (*steps)++;
         (*index)++;
         if(*index > 7) *index = 0;
+    } else {
+        return;
     }
 
     for(int j = 0; j < 4; j++) {

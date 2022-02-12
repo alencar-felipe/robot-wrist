@@ -1,33 +1,25 @@
-#include <stdio.h>
-
 #include "main.h"
-#include "gpio.h"
-#include "usart.h"
-#include "adc.h"
-#include "stepper.h"
 
 stepper_t stepper1, stepper2;
 
-int main() {
-	GPIO_TypeDef *gpio_ports[4];
-    uint32_t gpio_pins[4];
+void clock_setup();
+void gpios_setup();
+void steppers_setup();
+void timer_setup();
+void tim3_handler();
+void wait();
+void enable_interrupt(IRQn_Type IRQn);
+void disable_interrupt(IRQn_Type IRQn);
 
+int main() {
     clock_setup();
-	main_gpio_setup();
+	gpios_setup();
+	steppers_setup();
+	timer_setup();
     usart_setup();
 	adc_setup();
 
-	for(int i = 0; i < 4; i++) {
-		gpio_ports[i] = GPIOA;
-		gpio_pins[i] = i;
-	}
-
-	gpio_pins[0] = 0;
-	gpio_pins[1] = 1;
-	gpio_pins[2] = 2;
-	gpio_pins[3] = 3;
-
-	stepper_setup(&stepper1, gpio_ports, gpio_pins);
+	int a = 0, b = 0;
 
     while (1) {
 		gpio_write(GPIOC, 13, HIGH);
@@ -35,12 +27,12 @@ int main() {
         gpio_write(GPIOC, 13, LOW);
         wait();
 
-		stepper_step(&stepper1, -1);
-		stepper_update(&stepper1);
+		stepper_step(&stepper1, -200);
+		stepper_step(&stepper2, -200);
 
-		int a = (int) adc_read(ADC1);
-		int b = (int) adc_read(ADC2);
-		
+		a = (int) adc_read(ADC1);
+		b = (int) adc_read(ADC2);
+
 		printf("%5d %5d\n\r", a, b);
     }
 
@@ -69,7 +61,7 @@ void clock_setup(void)
 	RCC->CFGR |= (0b10 << 0);
 }
 
-void main_gpio_setup()
+void gpios_setup()
 {
 	// built-in led
 	gpio_setup(GPIOC, GPIO_OUT, 13);
@@ -80,8 +72,66 @@ void main_gpio_setup()
 	}
 }
 
+void steppers_setup()
+{
+	GPIO_TypeDef *gpio_ports[4];
+    uint32_t gpio_pins[4];
+
+	for(int i = 0; i < 4; i++) {
+		gpio_ports[i] = GPIOA;
+		gpio_pins[i] = i;
+	}
+
+	stepper_setup(&stepper1, gpio_ports, gpio_pins);
+
+	for(int i = 0; i < 4; i++) {
+		gpio_ports[i] = GPIOA;
+		gpio_pins[i] = i + 4;
+	}
+
+	stepper_setup(&stepper2, gpio_ports, gpio_pins);
+}
+
+void timer_setup()
+{
+	// Enable clock for that module for TIM3. Bit1 in RCC APB1ENR register
+	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+	// Reset CR1 just in case
+	TIM3->CR1 = 0x0000;
+	// fCK_PSC / (PSC[15:0] + 1)
+	// 72 Mhz / (719 + 1) = 100 khz timer clock speed
+	TIM3->PSC = 719;
+	// Should generate 2 ms interrupts
+	TIM3->ARR = 200;
+	// Update Interrupt Enable
+	TIM3->DIER |= TIM_DIER_UIE;
+	// Priority level 1
+	NVIC->IPR[TIM3_IRQn] = 0x10;
+	// Enable TIM3 from NVIC register
+	enable_interrupt(TIM3_IRQn);
+	// Finally enable TIM3 module
+	TIM3->CR1 |= TIM_CR1_CEN;
+}
+
+void tim3_handler()
+{
+	stepper_update(&stepper1);
+	stepper_update(&stepper2);
+	TIM3->SR &= ~TIM_SR_UIF;
+}
+
 void wait() 
 {
     // Do some NOPs for a while to pass some time.
     for (unsigned int i = 0; i < 200000; ++i) __asm__ volatile ("nop");
+}
+
+void enable_interrupt(IRQn_Type IRQn)
+{
+	NVIC->ISER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
+}
+
+void disable_interrupt(IRQn_Type IRQn)
+{
+	NVIC->ICER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F));
 }

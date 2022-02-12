@@ -36,6 +36,10 @@
 #ifndef __STM32F103x6_H
 #define __STM32F103x6_H
 
+//#include "core_cm3.h"
+//#include "system_stm32f1xx.h"
+#include <stdint.h>
+
 #define     __IO    volatile          /*!< Defines 'read / write' permissions */
 
 #ifdef __cplusplus
@@ -56,6 +60,23 @@
 /**
   * @}
   */
+
+typedef struct
+{
+	uint32_t   ISER[8];     /* Address offset: 0x000 - 0x01C */
+	uint32_t  RES0[24];     /* Address offset: 0x020 - 0x07C */
+	uint32_t   ICER[8];     /* Address offset: 0x080 - 0x09C */
+	uint32_t  RES1[24];     /* Address offset: 0x0A0 - 0x0FC */
+	uint32_t   ISPR[8];     /* Address offset: 0x100 - 0x11C */
+	uint32_t  RES2[24];     /* Address offset: 0x120 - 0x17C */
+	uint32_t   ICPR[8];     /* Address offset: 0x180 - 0x19C */
+	uint32_t  RES3[24];     /* Address offset: 0x1A0 - 0x1FC */
+	uint32_t   IABR[8];     /* Address offset: 0x200 - 0x21C */
+	uint32_t  RES4[56];     /* Address offset: 0x220 - 0x2FC */
+	uint8_t   IPR[240];     /* Address offset: 0x300 - 0x3EC */
+	uint32_t RES5[644];     /* Address offset: 0x3F0 - 0xEFC */
+	uint32_t       STIR;    /* Address offset:         0xF00 */
+} NVIC_type;
 
 /** @addtogroup Peripheral_interrupt_number_definition
   * @{
@@ -124,10 +145,6 @@ typedef enum
 /**
   * @}
   */
-
-//#include "core_cm3.h"
-//#include "system_stm32f1xx.h"
-#include <stdint.h>
 
 /** @addtogroup Peripheral_registers_structures
   * @{
@@ -564,7 +581,7 @@ typedef struct
 /** @addtogroup Peripheral_memory_map
   * @{
   */
-
+#define NVIC_BASE       ((uint32_t) 0xE000E100)
 
 #define FLASH_BASE            0x08000000UL /*!< FLASH base address in the alias region */
 #define FLASH_BANK1_END       0x08007FFFUL /*!< FLASH END address of bank1 */
@@ -635,6 +652,8 @@ typedef struct
 /** @addtogroup Peripheral_declaration
   * @{
   */  
+
+#define NVIC                ((NVIC_type  *)  NVIC_BASE)
 
 #define TIM2                ((TIM_TypeDef *)TIM2_BASE)
 #define TIM3                ((TIM_TypeDef *)TIM3_BASE)
