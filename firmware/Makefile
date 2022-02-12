@@ -17,7 +17,8 @@ src/startup.c \
 src/main.c \
 src/gpio.c \
 src/usart.c \
-src/adc.c
+src/adc.c \
+src/stepper.c
 
 # ASM sources
 ASM_SOURCES =
