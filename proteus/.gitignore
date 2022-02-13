@@ -1,3 +1,7 @@
 *.workspace
 
 *.pdsbak
+
+*.pdf
+
+*.jpg

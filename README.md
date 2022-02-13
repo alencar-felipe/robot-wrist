@@ -14,9 +14,16 @@
 
 Robot - Wrist Project :
 
-Desenvolvimento de um robô de pulso utilizando-se a bluepill e a implementação por meio do simulador Proteus. 
+Desenvolvimento de um robô de pulso utilizando a bluepill e o esquemático por meio do simulador Proteus. 
 
-Ademais, implementou-se o código necessário sem a utilização do software STM32CUBE IDE, priorizando-se os periféricos e configurações utilizados na construção do robô de pulso, como a USART, ADC e TIMER.
+Implementou-se o código necessário sem a utilização do software STM32CUBE IDE, priorizando-se os periféricos e configurações utilizados na construção do robô de pulso: USART, ADC e TIMER.
+
+A imagem abaixo ilustra o esquemático construído.
+
+<img src = "./proteus/schematic-robot-wrist.jpg">
+
+
+
 
 
 
