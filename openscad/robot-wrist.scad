@@ -190,7 +190,7 @@ module differential(){
     arm(size=ro, gear_x=height_f);
     
     if($preview) {
-        //steppers(dx=height_f+thk);
+        steppers(dx=height_f+thk);
     }
     
     echo("dice_in = ", dice_in);

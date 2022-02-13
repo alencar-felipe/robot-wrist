@@ -1,3 +1,4 @@
+# Firmware
 ## Custom Gcode
 ### W0: Move
 Performs a movement.
