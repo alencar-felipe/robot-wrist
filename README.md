@@ -23,7 +23,7 @@ A imagem abaixo ilustra o esquemático elaborado no proteus.
 
 ![image](schematic-robot-wrist.jpg)
 
-Ao analisar o circuito acima, obversa-se a utilização do microcontrolador STM32F103C6, de dois motores stepper, dois comoponentes ULN2003A, dois amplificadores operacionais, resistores, uma porta USART, duas portas ADC e um crystal para a determinação do sinal de clock.
+Ao analisar o circuito acima, observa-se a utilização do microcontrolador STM32F103C6, de dois motores stepper, dois comoponentes ULN2003A, dois amplificadores operacionais, resistores, uma porta USART, duas portas ADC, fonte de tensão constante de 5 V, dois capacitores e um crystal para a determinação do sinal de clock.
 
 
 
