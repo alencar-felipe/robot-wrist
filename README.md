@@ -20,7 +20,7 @@ Implementou-se o código necessário sem a utilização do software STM32CUBE ID
 
 A imagem abaixo ilustra o esquemático construído.
 
-<img src = "./proteus/schematic-robot-wrist.jpg">
+![alt text](./proteus/schematic-robot-wrist.jpg)
 
 
 
