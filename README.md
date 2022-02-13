@@ -1,13 +1,27 @@
-# **Robot - Wrist**
+# robot-wrist
 
-## **Sistemas Microprocessados**
+## About
 
-### Professor: Ricardo Jardel Nunes da Silveira
+The robot-wrist is a robot that (tries to) mimic the movement of a human wrist
+(and forearm). In addition to developing the robot itself, it also was 
+integrated with a 3D printer and a PS4 controller to demonstrate a usage case.
 
-### Equipe:
+Furthermore, it is the final project of the discipline of the discipline of
+Microprocessed Systems taught by Professor Ricardo Jardel Nunes da Silveira 
+from the Federal University of Ceará (UFC).
 
-- Dariel Bezerra de Sousa - Matrícula: 495208.
-- Felipe Paiva Alencar - Matrícula: 494543.
+## Authors
+
+- Dariel Bezerra de Sousa (495208)
+- Felipe Paiva Alencar (494543).
+
+## Summary
+- [Controller](controller/)
+- [Firmware](firmware/)
+- [OpenSCAD](openscad/)
+- [Proteus](proteus)
+
+
 
 ---
 
@@ -21,9 +35,11 @@ Implementou-se o código necessário sem a utilização do software STM32CUBE ID
 A imagem abaixo ilustra o esquemático elaborado no proteus.
 
 
-![image](schematic-robot-wrist.jpg)
 
-Ao analisar o circuito acima, observa-se a utilização do microcontrolador STM32F103C6, de dois motores stepper, dois comoponentes ULN2003A, dois amplificadores operacionais, resistores, uma porta USART, duas portas ADC, fonte de tensão constante de 5 V, dois capacitores e um crystal para a determinação do sinal de clock.
+
+
+
+
 
 
 
