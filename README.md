@@ -1,5 +1,6 @@
 # robot-wrist
 
+![robot-wrist](images/all.jpg)
 ## About
 
 The robot-wrist is a robot that (tries to) mimic the movement of a human wrist
