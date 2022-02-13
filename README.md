@@ -18,10 +18,12 @@ Desenvolvimento de um robô de pulso utilizando a bluepill e o esquemático por 
 
 Implementou-se o código necessário sem a utilização do software STM32CUBE IDE, priorizando-se os periféricos e configurações utilizados na construção do robô de pulso: USART, ADC e TIMER.
 
-A imagem abaixo ilustra o esquemático construído.
+A imagem abaixo ilustra o esquemático elaborado no proteus.
 
 
 ![image](schematic-robot-wrist.jpg)
+
+Ao analisar o circuito acima, obversa-se a utilização do microcontrolador STM32F103C6, de dois motores stepper, dois comoponentes ULN2003A, dois amplificadores operacionais, resistores, uma porta USART, duas portas ADC e um crystal para a determinação do sinal de clock.
 
 
 
