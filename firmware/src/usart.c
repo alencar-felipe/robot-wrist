@@ -52,6 +52,6 @@ int _write(int fd, char *ptr, int len)
 
 int _read (int fd, char *ptr, int len) 
 {
-  usart_read(ptr, len);
-  return len;
+	usart_read(ptr, len);
+	return len;
 }
