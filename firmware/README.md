@@ -8,11 +8,11 @@ Abstraction Layer (HAL) provided by the STM32CubeMX software. Therefore, we
 configured all the registers manually. (We also made the linker and startup code
 from scratch)
 
-The code listen from incoming gcode commands from the USART and, when the robot 
+The code listens for incoming gcode commands from the USART and, when the robot 
 receives a command, it takes the necessary action: move the motors, change the
 coordinate origin or measure current.
 
-Peripherals used: ADC1, ADC2, GPIO,  TIM3, USART1. 
+Peripherals used: ADC1, ADC2, GPIO, TIM3, USART1. 
 
 ## Custom Gcode
 ### W0: Move
