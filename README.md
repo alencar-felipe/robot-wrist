@@ -1,6 +1,7 @@
 # robot-wrist
 
-![robot-wrist](images/all.jpg)
+![robot-wrist](images/robot-wrist.jpg)
+
 ## About
 
 The robot-wrist is a robot that (tries to) mimic the movement of a human wrist
@@ -19,36 +20,11 @@ of Ceará (UFC).
 ## Summary
 - [Controller](controller/)
 - [Firmware](firmware/)
-- [OpenSCAD](openscad/)
-- [Proteus](proteus)
+- [OpenSCAD (3D Model)](openscad/)
+- [Proteus (Schematic)](proteus)
 
 ## Video
 
 (placeholder)
 
 [![Video](https://yt-embed.herokuapp.com/embed?v=ImVbYVC3YyA)](http://www.youtube.com/watch?v=ImVbYVC3YyA "Projeto Final da Disciplina de POO")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
