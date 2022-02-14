@@ -1,4 +1,14 @@
 # Firmware
+
+## About
+
+This firmware runs on an [STM32F103C6T6](https://www.st.com/en/microcontrollers-microprocessors/stm32f103c6.html).
+The main highlight of this code is that it does not use on the Hardware 
+Abstraction Layer (HAL) provided by the STM32CubeMX software. Therefore, we
+configured all the registers manually. (We also made the linker and startup code
+from scratch)
+
+Peripherals used: ADC1, ADC2, GPIO,  TIM3, USART1. 
 ## Custom Gcode
 ### W0: Move
 Performs a movement.
