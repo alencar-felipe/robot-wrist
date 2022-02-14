@@ -10,7 +10,7 @@ accompanies each motor driver.
  - 2x ULN2003A (Stepper Motor Driver)
  - 1x LM358 (OP-AMP)
 
-## Schematic
+## Simplified Schematic 
 
 ![Schematic](images/schematic.jpg)
 
