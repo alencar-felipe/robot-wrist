@@ -25,6 +25,4 @@ of Ceará (UFC).
 
 ## Video
 
-(placeholder)
-
-[![Video](https://yt-embed.herokuapp.com/embed?v=ImVbYVC3YyA)](http://www.youtube.com/watch?v=ImVbYVC3YyA "Projeto Final da Disciplina de POO")
+[![Video](https://yt-embed.herokuapp.com/embed?v=ubxL-wMxCd8)](https://www.youtube.com/watch?v=ubxL-wMxCd8 "Projeto Final da Disciplina de POO")
